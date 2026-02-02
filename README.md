@@ -8,14 +8,14 @@ A beautiful Valentine's-themed confession web app built with Nuxt UI, featuring 
 - 💝 Animated chocolates, hearts, and roses floating across the screen
 - 📝 Simple confession submission form
 - 🗄️ Supabase database integration
-- 🚀 Ready for deployment on Vercel and Digital Ocean
+- 🚀 Ready for deployment on Vercel
 
 ## Tech Stack
 
 - **Framework**: Nuxt 3
 - **UI Library**: Nuxt UI
 - **Database**: Supabase (PostgreSQL)
-- **Deployment**: Vercel / Digital Ocean
+- **Deployment**: Vercel
 
 ## Local Development Setup
 
@@ -39,11 +39,12 @@ A beautiful Valentine's-themed confession web app built with Nuxt UI, featuring 
 
 3. **Set up environment variables**
    
-   Create a `.env` file in the root directory:
+   Create a `.env` or `.env.local` file in the root directory (Nuxt only loads files that start with `.env`):
    ```env
    SUPABASE_URL=your_supabase_project_url
    SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
+   Use the **anon public** key from Supabase → Settings → API (it’s a long JWT starting with `eyJ`).
 
 4. **Run the development server**
    ```bash
@@ -151,62 +152,9 @@ git push -u origin main
 3. Wait 2-3 minutes for the build to complete
 4. Your app will be live at `https://your-project-name.vercel.app`
 
-### Step 4: Update Supabase CORS (Important!)
+### Step 4: CORS (You can skip this!)
 
-1. Go to your Supabase project → **Settings** → **API**
-2. Scroll down to "CORS Configuration"
-3. Add your Vercel URL: `https://your-project-name.vercel.app`
-4. Click "Save"
-
-## Digital Ocean App Platform Deployment
-
-### Step 1: Prepare Your Repository
-
-Make sure your code is pushed to GitHub (see GitHub Setup above).
-
-### Step 2: Create Digital Ocean Account
-
-1. Go to [digitalocean.com](https://digitalocean.com)
-2. Sign up for an account
-3. Verify your email
-
-### Step 3: Create a New App
-
-1. In Digital Ocean dashboard, click "Create" → "Apps"
-2. Choose "GitHub" as source
-3. Authorize Digital Ocean to access your GitHub
-4. Select your `ssc-confession-room` repository
-5. Click "Next"
-
-### Step 4: Configure Build Settings
-
-1. Digital Ocean should auto-detect Nuxt.js
-2. Verify settings:
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `.output/public`
-   - **Run Command**: `node .output/server/index.mjs`
-3. Click "Next"
-
-### Step 5: Add Environment Variables
-
-1. Click "Edit" next to Environment Variables
-2. Add:
-   - **SUPABASE_URL**: Your Supabase project URL
-   - **SUPABASE_ANON_KEY**: Your Supabase anon key
-3. Click "Next"
-
-### Step 6: Choose Plan and Deploy
-
-1. Select a plan (Basic plan $5/month is fine for small apps)
-2. Choose a region closest to your users
-3. Click "Create Resources"
-4. Wait 5-10 minutes for deployment
-
-### Step 7: Update Supabase CORS
-
-1. Go to Supabase → **Settings** → **API**
-2. Add your Digital Ocean app URL to CORS
-3. Click "Save"
+Supabase’s **Data API** (used by the Supabase JS client) allows cross-origin requests by default. There is **no CORS setting** in the dashboard (Settings → API only shows API keys, JWT, etc.). Your Vercel app should work without any CORS configuration. If you see CORS errors, double-check your `SUPABASE_URL` and `SUPABASE_ANON_KEY` environment variables.
 
 ## Database Queries
 
@@ -248,20 +196,22 @@ ORDER BY created_at DESC;
 
 ## Troubleshooting
 
-### Issue: "Failed to send confession"
+### Issue: "Failed to send confession" or "Invalid API key"
 
 **Solution**: 
-- Check that your Supabase URL and key are correct in environment variables
-- Verify the `confessions` table exists in Supabase
-- Check Supabase logs for errors
+- Use a file named **`.env`** or **`.env.local`** (not `env.local`) so Nuxt loads your variables.
+- Use the **anon public** key from Supabase → **Settings** → **API** → **Project API keys** (the long JWT starting with `eyJ`). A key that starts with `sb_publishable_` or similar is not the Supabase anon key.
+- Check that your Supabase URL and key are correct in environment variables.
+- Verify the `confessions` table exists in Supabase.
+- Check Supabase logs for errors.
 
 ### Issue: CORS errors in browser console
 
 **Solution**:
-- Make sure your deployment URL is added to Supabase CORS settings
-- Check that environment variables are set correctly in your deployment platform
+- Supabase’s Data API allows cross-origin requests by default, so CORS is rarely the cause. First check that `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set correctly in your deployment platform (e.g. Vercel).
+- Ensure you’re using the **anon/public** key from **Settings → API** (under “Project API keys”), not the service role key.
 
-### Issue: Build fails on Vercel/Digital Ocean
+### Issue: Build fails on Vercel
 
 **Solution**:
 - Ensure all dependencies are in `package.json`
@@ -314,7 +264,7 @@ ssc-confession-room/
 For issues or questions:
 1. Check the troubleshooting section above
 2. Review Supabase logs in the dashboard
-3. Check deployment platform logs (Vercel/Digital Ocean)
+3. Check deployment platform logs (e.g. Vercel)
 
 ## License
 

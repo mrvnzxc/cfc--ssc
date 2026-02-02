@@ -2,9 +2,9 @@
   <div class="confession-container">
     <!-- Animated Background Elements -->
     <div class="animated-background">
-      <div v-for="i in 20" :key="`chocolate-${i}`" class="chocolate" :style="getRandomStyle('chocolate')"></div>
-      <div v-for="i in 15" :key="`heart-${i}`" class="heart" :style="getRandomStyle('heart')">❤️</div>
-      <div v-for="i in 10" :key="`rose-${i}`" class="rose" :style="getRandomStyle('rose')">🌹</div>
+      <div v-for="i in 20" :key="`chocolate-${i}`" class="float-emoji chocolate" :style="getRandomStyle('chocolate')">🍫</div>
+      <div v-for="i in 15" :key="`heart-${i}`" class="float-emoji heart" :style="getRandomStyle('heart')">❤️</div>
+      <div v-for="i in 10" :key="`rose-${i}`" class="float-emoji rose" :style="getRandomStyle('rose')">🌹</div>
     </div>
 
     <!-- Main Content -->
@@ -51,8 +51,6 @@
 </template>
 
 <script setup lang="ts">
-const supabase = useSupabaseClient()
-
 const formState = reactive({
   confession: ''
 })
@@ -61,16 +59,22 @@ const isSubmitting = ref(false)
 const alertMessage = ref('')
 const alertType = ref<'success' | 'error'>('success')
 
+const floatAnimations = ['float1', 'float2', 'float3', 'float4', 'float5']
+
 const getRandomStyle = (type: string) => {
   const size = type === 'chocolate' ? 30 : type === 'heart' ? 25 : 35
-  const duration = 10 + Math.random() * 20
-  const delay = Math.random() * 5
+  const duration = 12 + Math.random() * 18
+  const delay = Math.random() * 8
   const left = Math.random() * 100
-  
+  const top = Math.random() * 100
+  const animationName = floatAnimations[Math.floor(Math.random() * floatAnimations.length)]
+
   return {
     left: `${left}%`,
+    top: `${top}%`,
     width: `${size}px`,
     height: `${size}px`,
+    animationName,
     animationDuration: `${duration}s`,
     animationDelay: `${delay}s`
   }
@@ -87,24 +91,18 @@ const submitConfession = async () => {
   alertMessage.value = ''
 
   try {
-    const { data, error } = await supabase
-      .from('confessions')
-      .insert([
-        {
-          confession: formState.confession.trim(),
-          created_at: new Date().toISOString()
-        }
-      ])
-      .select()
-
-    if (error) throw error
+    await $fetch('/api/confess', {
+      method: 'POST',
+      body: { confession: formState.confession.trim() }
+    })
 
     alertMessage.value = 'Your confession has been sent successfully! 💕'
     alertType.value = 'success'
     formState.confession = ''
   } catch (error: any) {
     console.error('Error submitting confession:', error)
-    alertMessage.value = error.message || 'Failed to send confession. Please try again.'
+    const msg = error?.data?.message || error?.message || 'Failed to send confession. Please try again.'
+    alertMessage.value = msg
     alertType.value = 'error'
   } finally {
     isSubmitting.value = false
@@ -142,38 +140,13 @@ const submitConfession = async () => {
   overflow: hidden;
 }
 
-.chocolate, .heart, .rose {
+.float-emoji {
   position: absolute;
-  opacity: 0.7;
-  animation: float linear infinite;
-}
-
-.chocolate {
-  background: #8B4513;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.heart, .rose {
+  opacity: 0.8;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
   font-size: inherit;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(100vh) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.7;
-  }
-  90% {
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateY(-100px) rotate(360deg);
-    opacity: 0;
-  }
 }
 
 .content-wrapper {

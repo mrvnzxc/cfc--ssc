@@ -8,9 +8,7 @@ This guide provides step-by-step instructions for deploying the SSC Confession R
 - [ ] Database table created
 - [ ] GitHub repository created and code pushed
 - [ ] Vercel deployment configured
-- [ ] Digital Ocean deployment configured (optional)
-- [ ] Environment variables set in all platforms
-- [ ] CORS configured in Supabase
+- [ ] Environment variables set in Vercel
 
 ## Detailed Setup Instructions
 
@@ -160,65 +158,6 @@ Your app URL will be: `https://ssc-confession-room.vercel.app` (or similar)
 
 ---
 
-### Part 4: Digital Ocean Deployment (10 minutes)
-
-#### 4.1 Create Account
-
-1. Go to https://digitalocean.com
-2. Click **Sign Up**
-3. Enter email and create password
-4. Verify email
-
-#### 4.2 Create App
-
-1. In dashboard, click **Create** → **Apps**
-2. Choose **GitHub** as source
-3. Authorize Digital Ocean (if first time)
-4. Select `ssc-confession-room` repository
-5. Click **Next**
-
-#### 4.3 Configure Build Settings
-
-1. **Resource Type**: Web Service (auto-selected)
-2. **Build Command**: `npm run build`
-3. **Output Directory**: `.output/public`
-4. **Run Command**: `node .output/server/index.mjs`
-5. Click **Edit** next to Environment Variables
-
-#### 4.4 Add Environment Variables
-
-Click **Add Variable** for each:
-
-**Variable 1:**
-- **Key**: `SUPABASE_URL`
-- **Value**: Your Supabase URL
-- **Scope**: Runtime
-
-**Variable 2:**
-- **Key**: `SUPABASE_ANON_KEY`
-- **Value**: Your Supabase anon key
-- **Scope**: Runtime
-
-Click **Save** after each.
-
-#### 4.5 Choose Plan
-
-1. **Plan**: Basic ($5/month) is sufficient
-2. **Region**: Choose closest to users
-3. Click **Create Resources**
-4. Wait 5-10 minutes for deployment
-
-#### 4.6 Update CORS
-
-1. Copy your Digital Ocean app URL
-2. Go to Supabase → **Settings** → **API**
-3. Add URL to CORS configuration
-4. Click **Save**
-
-✅ **Digital Ocean Deployment Complete!**
-
----
-
 ## Testing Your Deployment
 
 ### Test Checklist
@@ -251,13 +190,11 @@ Click **Save** after each.
 
 **Causes:**
 - Environment variables not set correctly
-- CORS not configured
 - Database table doesn't exist
 
 **Solutions:**
-1. Double-check environment variables in deployment platform
-2. Verify CORS includes your deployment URL
-3. Run `supabase-schema.sql` again in Supabase SQL Editor
+1. Double-check `SUPABASE_URL` and `SUPABASE_ANON_KEY` in your deployment platform (use the **anon** key from Settings → API, not the service role key).
+2. Run `supabase-schema.sql` again in Supabase SQL Editor.
 
 ### ❌ Build fails on Vercel
 
@@ -274,12 +211,11 @@ Click **Save** after each.
 ### ❌ CORS errors in browser
 
 **Causes:**
-- Deployment URL not in Supabase CORS list
-- Wrong Supabase URL in env vars
+- Wrong Supabase URL or key in env vars (most common)
+- Using the wrong API key (e.g. service role instead of anon)
 
 **Solutions:**
-1. Add deployment URL to Supabase CORS
-2. Verify `SUPABASE_URL` matches your project URL exactly
+1. Supabase’s Data API allows cross-origin requests by default; there is no CORS setting in the dashboard. Verify `SUPABASE_URL` and `SUPABASE_ANON_KEY` (anon/public key from **Settings → API**) are set correctly in your deployment platform.
 
 ### ❌ Animated elements not showing
 
@@ -307,7 +243,6 @@ Click **Save** after each.
    git push
    ```
 4. **Vercel** will auto-deploy (watch dashboard)
-5. **Digital Ocean** may need manual redeploy (or enable auto-deploy)
 
 ### Updating Environment Variables
 
@@ -315,11 +250,6 @@ Click **Save** after each.
 1. Project → Settings → Environment Variables
 2. Edit existing or add new
 3. Redeploy (automatic)
-
-**Digital Ocean:**
-1. App → Settings → App-Level Environment Variables
-2. Edit or add
-3. Click "Save" → Redeploy
 
 ---
 
@@ -363,15 +293,13 @@ WHERE created_at < NOW() - INTERVAL '7 days';
 
 - **Supabase**: Free (500MB database, 2GB bandwidth)
 - **Vercel**: Free (100GB bandwidth/month)
-- **Digital Ocean**: $5/month (Basic plan)
 
-**Total**: $5/month (or $0 if only using Vercel)
+**Total**: $0/month
 
 ### Scaling Up
 
 - **Supabase Pro**: $25/month (8GB database)
 - **Vercel Pro**: $20/month (unlimited bandwidth)
-- **Digital Ocean**: $12/month (Professional plan)
 
 ---
 
@@ -389,7 +317,7 @@ WHERE created_at < NOW() - INTERVAL '7 days';
 
 After deployment, consider:
 
-1. ✅ Add custom domain (Vercel/Digital Ocean support this)
+1. ✅ Add custom domain (Vercel supports this)
 2. ✅ Set up monitoring/analytics
 3. ✅ Add rate limiting (prevent spam)
 4. ✅ Create admin panel to view confessions

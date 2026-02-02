@@ -7,3 +7,38 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
+
+/* Global keyframes for floating emojis (must be global so inline animationName matches) */
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(8vw, -12vh) rotate(90deg); }
+  50% { transform: translate(-6vw, -5vh) rotate(180deg); }
+  75% { transform: translate(5vw, -8vh) rotate(270deg); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-10vw, 8vh) rotate(-90deg); }
+  50% { transform: translate(7vw, 5vh) rotate(-180deg); }
+  75% { transform: translate(-8vw, -6vh) rotate(-270deg); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(12vw, 6vh) rotate(120deg); }
+  66% { transform: translate(-9vw, -10vh) rotate(240deg); }
+}
+
+@keyframes float4 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-11vw, -7vh) rotate(-120deg); }
+  66% { transform: translate(6vw, 9vh) rotate(-240deg); }
+}
+
+@keyframes float5 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(4vw, -9vh) rotate(72deg); }
+  40% { transform: translate(-7vw, 4vh) rotate(144deg); }
+  60% { transform: translate(9vw, 6vh) rotate(216deg); }
+  80% { transform: translate(-5vw, -7vh) rotate(288deg); }
+}

@@ -58,15 +58,7 @@ Visit: http://localhost:3000
    - `SUPABASE_URL`
    - `SUPABASE_ANON_KEY`
 4. Deploy!
-5. Add Vercel URL to Supabase CORS (Settings → API)
-
-### Option B: Digital Ocean
-
-1. Push code to GitHub
-2. Digital Ocean → Create → Apps
-3. Connect GitHub repo
-4. Add environment variables
-5. Deploy!
+5. No CORS config needed—Supabase Data API allows cross-origin requests by default
 
 ## That's It! 🎉
 
