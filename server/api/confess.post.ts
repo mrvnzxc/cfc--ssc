@@ -2,13 +2,13 @@ import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  const supabaseUrl = config.public.supabaseUrl || process.env.SUPABASE_URL
-  const supabaseAnonKey = config.public.supabaseAnonKey || process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY
+  const supabaseUrl = (config.public.supabaseUrl || process.env.SUPABASE_URL || '').trim()
+  const supabaseAnonKey = (config.public.supabaseAnonKey || process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY || '').trim()
 
   if (!supabaseUrl || !supabaseAnonKey) {
     throw createError({
       statusCode: 500,
-      message: 'Server misconfiguration: Supabase credentials not set. Add SUPABASE_URL and SUPABASE_ANON_KEY in Vercel (or .env).'
+      message: 'Supabase credentials not set. In Vercel: Project → Settings → Environment Variables → add SUPABASE_URL and SUPABASE_ANON_KEY, then redeploy.'
     })
   }
 
