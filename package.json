@@ -1,0 +1,21 @@
+{
+  "name": "ssc-confession-room",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^2.19.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "nuxt": "^3.13.0"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest"
+  }
+}
