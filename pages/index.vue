@@ -2,9 +2,9 @@
   <div class="confession-container">
     <!-- Animated Background Elements -->
     <div class="animated-background">
-      <div v-for="i in 20" :key="`chocolate-${i}`" class="chocolate" :style="getRandomStyle('chocolate')"></div>
-      <div v-for="i in 15" :key="`heart-${i}`" class="heart" :style="getRandomStyle('heart')">❤️</div>
-      <div v-for="i in 10" :key="`rose-${i}`" class="rose" :style="getRandomStyle('rose')">🌹</div>
+      <div v-for="i in 20" :key="`chocolate-${i}`" class="float-emoji chocolate" :style="getRandomStyle('chocolate')">🍫</div>
+      <div v-for="i in 15" :key="`heart-${i}`" class="float-emoji heart" :style="getRandomStyle('heart')">❤️</div>
+      <div v-for="i in 10" :key="`rose-${i}`" class="float-emoji rose" :style="getRandomStyle('rose')">🌹</div>
     </div>
 
     <!-- Main Content -->
@@ -61,16 +61,22 @@ const isSubmitting = ref(false)
 const alertMessage = ref('')
 const alertType = ref<'success' | 'error'>('success')
 
+const floatAnimations = ['float1', 'float2', 'float3', 'float4', 'float5']
+
 const getRandomStyle = (type: string) => {
   const size = type === 'chocolate' ? 30 : type === 'heart' ? 25 : 35
-  const duration = 10 + Math.random() * 20
-  const delay = Math.random() * 5
+  const duration = 12 + Math.random() * 18
+  const delay = Math.random() * 8
   const left = Math.random() * 100
-  
+  const top = Math.random() * 100
+  const animationName = floatAnimations[Math.floor(Math.random() * floatAnimations.length)]
+
   return {
     left: `${left}%`,
+    top: `${top}%`,
     width: `${size}px`,
     height: `${size}px`,
+    animationName,
     animationDuration: `${duration}s`,
     animationDelay: `${delay}s`
   }
@@ -142,38 +148,48 @@ const submitConfession = async () => {
   overflow: hidden;
 }
 
-.chocolate, .heart, .rose {
+.float-emoji {
   position: absolute;
-  opacity: 0.7;
-  animation: float linear infinite;
-}
-
-.chocolate {
-  background: #8B4513;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.heart, .rose {
+  opacity: 0.8;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
   font-size: inherit;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
-@keyframes float {
-  0% {
-    transform: translateY(100vh) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.7;
-  }
-  90% {
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateY(-100px) rotate(360deg);
-    opacity: 0;
-  }
+/* Random drift paths – emojis wander around the screen in different directions */
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(8vw, -12vh) rotate(90deg); }
+  50% { transform: translate(-6vw, -5vh) rotate(180deg); }
+  75% { transform: translate(5vw, -8vh) rotate(270deg); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-10vw, 8vh) rotate(-90deg); }
+  50% { transform: translate(7vw, 5vh) rotate(-180deg); }
+  75% { transform: translate(-8vw, -6vh) rotate(-270deg); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(12vw, 6vh) rotate(120deg); }
+  66% { transform: translate(-9vw, -10vh) rotate(240deg); }
+}
+
+@keyframes float4 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-11vw, -7vh) rotate(-120deg); }
+  66% { transform: translate(6vw, 9vh) rotate(-240deg); }
+}
+
+@keyframes float5 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(4vw, -9vh) rotate(72deg); }
+  40% { transform: translate(-7vw, 4vh) rotate(144deg); }
+  60% { transform: translate(9vw, 6vh) rotate(216deg); }
+  80% { transform: translate(-5vw, -7vh) rotate(288deg); }
 }
 
 .content-wrapper {
