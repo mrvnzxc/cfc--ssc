@@ -24,17 +24,15 @@ export default defineEventHandler(async (event) => {
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('confessions')
     .insert([{ confession, created_at: new Date().toISOString() }])
     .select()
 
   if (error) {
-    throw createError({
-      statusCode: 400,
-      message: error.message || 'Failed to save confession.'
-    })
+    const message = error.message || 'Failed to save confession.'
+    throw createError({ statusCode: 400, message })
   }
 
-  return { success: true }
+  return { success: true, id: data?.[0]?.id }
 })

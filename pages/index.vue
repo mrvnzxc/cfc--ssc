@@ -101,7 +101,8 @@ const submitConfession = async () => {
     formState.confession = ''
   } catch (error: any) {
     console.error('Error submitting confession:', error)
-    const msg = error?.data?.message || error?.message || 'Failed to send confession. Please try again.'
+    const data = error?.data ?? error?.response?._data
+    const msg = data?.message ?? error?.message ?? 'Failed to send confession. Please try again.'
     alertMessage.value = msg
     alertType.value = 'error'
   } finally {
