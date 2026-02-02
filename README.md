@@ -134,16 +134,34 @@ git push -u origin main
 4. Import your `ssc-confession-room` repository
 5. Click "Import"
 
-### Step 2: Configure Environment Variables
+### Step 2: Add Environment Variables (required for confessions)
 
-1. In the project settings, go to **Environment Variables**
-2. Add the following:
-   - **Name**: `SUPABASE_URL`
-     **Value**: Your Supabase project URL
-   - **Name**: `SUPABASE_ANON_KEY`
-     **Value**: Your Supabase anon key
-3. Make sure both are selected for **Production**, **Preview**, and **Development**
-4. Click "Save"
+If you see **"Invalid API key"** or **"Supabase credentials not set"** on Vercel, do this:
+
+1. Open **[vercel.com](https://vercel.com)** and log in.
+2. Open your **project** (the one connected to `cfc--ssc` or your repo).
+3. Click the **Settings** tab (top menu).
+4. In the left sidebar, click **Environment Variables**.
+5. Add **two** variables (one at a time):
+
+   **First variable**
+   - **Key:** `SUPABASE_URL`  
+   - **Value:** Your Supabase project URL, e.g. `https://xxxxxxxx.supabase.co`  
+   - **Environments:** tick **Production**, **Preview**, and **Development**.  
+   - Click **Save**.
+
+   **Second variable**
+   - **Key:** `SUPABASE_ANON_KEY`  
+   - **Value:** Your Supabase **anon public** key (the long JWT that starts with `eyJ...`).  
+   - Get it from: [Supabase](https://supabase.com/dashboard) → your project → **Settings** (gear) → **API** → under **Project API keys** copy the **anon** / **public** key (not the `service_role` key).  
+   - **Environments:** tick **Production**, **Preview**, and **Development**.  
+   - Click **Save**.
+
+6. **Redeploy** so the new variables are used:
+   - Go to the **Deployments** tab.
+   - Open the **⋯** menu on the latest deployment.
+   - Click **Redeploy** (no need to change anything).
+   - Wait for the new deployment to finish, then try submitting a confession again.
 
 ### Step 3: Deploy
 
@@ -232,12 +250,12 @@ ssc-confession-room/
 ├── assets/
 │   └── css/
 │       └── main.css          # Global styles
-├── composables/
-│   └── useSupabase.ts        # Supabase composable
 ├── pages/
 │   └── index.vue             # Main confession page
-├── plugins/
-│   └── supabase.client.ts    # Supabase plugin
+├── server/
+│   └── api/
+│       ├── confess.post.ts   # Submit confession (uses Supabase server-side)
+│       └── check-env.get.ts # Debug: check env vars on Vercel
 ├── app.vue                   # Root component
 ├── nuxt.config.ts            # Nuxt configuration
 ├── package.json              # Dependencies
