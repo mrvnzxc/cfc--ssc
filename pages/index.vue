@@ -64,7 +64,6 @@ const floatAnimations = ['float1', 'float2', 'float3', 'float4', 'float5']
 const getRandomStyle = (type: string) => {
   const size = type === 'chocolate' ? 30 : type === 'heart' ? 25 : 35
   const duration = 12 + Math.random() * 18
-  const delay = Math.random() * 8
   const left = Math.random() * 100
   const top = Math.random() * 100
   const animationName = floatAnimations[Math.floor(Math.random() * floatAnimations.length)]
@@ -76,7 +75,7 @@ const getRandomStyle = (type: string) => {
     height: `${size}px`,
     animationName,
     animationDuration: `${duration}s`,
-    animationDelay: `${delay}s`
+    animationDelay: '0s'
   }
 }
 
